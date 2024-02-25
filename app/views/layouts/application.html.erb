@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%= csrf_meta_tags %> <%= csp_meta_tag %> <%= stylesheet_link_tag 'application', media:
+		'all', 'data-turbolinks-track': 'reload' %>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="https://webfontworld.github.io/onestore/OneMobilePop.css" rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+			integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+		/>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://code.jquery.com/jquery-3.6.3.min.js"
+			integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+			crossorigin="anonymous"
+		></script>
+		<script type="module">
+			import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
+			import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js';
+			import {
+				getAuth,
+				onAuthStateChanged,
+			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
+			import {
+				getFirestore,
+				doc,
+				getDoc,
+			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+
+			const firebaseConfig = {
+				apiKey: 'AIzaSyCyJ_NaOKk-judnyH7vw80dFNjr1JZcMHI',
+				authDomain: 'lagandaalledu.firebaseapp.com',
+				projectId: 'lagandaalledu',
+				storageBucket: 'lagandaalledu.appspot.com',
+				messagingSenderId: '1068623284262',
+				appId: '1:1068623284262:web:70d5927640ea002476bee7',
+				measurementId: 'G-3JGM0NGWDB',
+			};
+
+			const app = initializeApp(firebaseConfig);
+			const analytics = getAnalytics(app);
+			const db = getFirestore();
+
+			const auth = getAuth();
+			const user = auth.currentUser;
+
+			onAuthStateChanged(auth, (user) => {
+				if (user) {
+					$('#notlogin').addClass('d-none');
+					$('#login').removeClass('d-none');
+					const uid = user.uid;
+					const docRef = doc(db, 'users', user.uid);
+					const docSnap = getDoc(docRef);
+				} else {
+					$('#login').addClass('d-none');
+					$('#notlogin').removeClass('d-none');
+				}
+			});
+		</script>
+		<script>
+			function displayError(method, error) {
+				if (method == 'firebase') {
+					$('#alert').removeClass('d-none');
+					document.getElementById('alert').innerHTML = error.message;
+					setTimeout(function () {
+						$('#alert').addClass('d-none');
+					}, 3000);
+				} else if (method == 'lagandaError') {
+					$('#alert').removeClass('d-none');
+					document.getElementById('alert').innerHTML = error;
+					setTimeout(function () {
+						$('#alert').addClass('d-none');
+					}, 3000);
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<nav
+			class="d-flex flex-wrap align-items-center justify-content-evenly py-2 mb-4 bg-dark fixed-top RixInooAriDuriR navbar navbar-dark navbar navbar-expand-lg shadow-lg"
+			aria-label="Offcanvas navbar large"
+		>
+			<div class="container-fluid">
+				<a
+					href="/"
+					class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-white text-decoration-none fs-5 navbar-brand"
+				>
+					<img src="/assets/img_logo_mini.png" alt="" height="45" width="45" />
+					LagandaAll Edu
+				</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="offcanvas"
+					data-bs-target="#offcanvasNavbar2"
+					aria-controls="offcanvasNavbar2"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div
+					class="offcanvas offcanvas-end text-bg-dark"
+					tabindex="-1"
+					id="offcanvasNavbar2"
+					aria-labelledby="offcanvasNavbar2Label"
+				>
+					<div class="offcanvas-header">
+						<h5 class="offcanvas-title" id="offcanvasNavbar2Label">LagandaAll Edu</h5>
+						<button
+							type="button"
+							class="btn-close btn-close-white"
+							data-bs-dismiss="offcanvas"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="offcanvas-body">
+						<ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+							<li class="nav-item">
+								<a class="nav-link" href="#">강좌 검색</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">대쉬보드</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a
+									class="nav-link dropdown-toggle"
+									href="#"
+									role="button"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"
+								>
+									커뮤니티
+								</a>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="#">공지사항</a></li>
+									<li><a class="dropdown-item" href="#">회원 커뮤니티</a></li>
+									<li><a class="dropdown-item" href="#">FAQ</a></li>
+									<li>
+										<a class="dropdown-item" href="#">Something else here</a>
+									</li>
+								</ul>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">랭크 비교</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">강좌 무제한 수강권</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">회사 소개</a>
+							</li>
+						</ul>
+						<div id="notlogin">
+							<a
+								role="button"
+								class="btn btn-primary me-1 shadow"
+								type="submit"
+								href="/login"
+								>로그인</a
+							>
+							<a
+								role="button"
+								class="btn btn-outline-primary ms-1 shadow"
+								type="submit"
+								href="/join"
+								>회원가입</a
+							>
+						</div>
+						<div id="login">
+							<a class="text-white text-decoration me-1" id="displayName">name</a>
+							<a
+								role="button"
+								class="btn btn-outline-primary ms-1"
+								type="submit"
+								href="/logout"
+								>로그아웃</a
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<main class="mt-5">
+			<%= yield %>
+		</main>
+		<div class="px-5 RixInooAriDuriR text-bg-light">
+			<footer class="py-5">
+				<div class="row row-cols-4">
+					<div class="col-6 col-md-2 mb-3">
+						<h5>약관</h5>
+						<ul class="nav flex-column">
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">이용약관</a>
+							</li>
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">개인정보보호처리방침</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="col-6 col-md-2 mb-3">
+						<h5>커뮤니티</h5>
+						<ul class="nav flex-column">
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">공지사항</a>
+							</li>
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">일반 게시판</a>
+							</li>
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">FAQ</a>
+							</li>
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">LagandaAll Community</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="col-6 col-md-2 mb-3">
+						<h5>강의 관련</h5>
+						<ul class="nav flex-column">
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">강의 검색</a>
+							</li>
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">강의 제작</a>
+							</li>
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">대쉬보드</a>
+							</li>
+							<li class="nav-item mb-2">
+								<a href="#" class="nav-link p-0 text-muted">우리반</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="col-md-5 offset-md-1 mb-3">
+						<form>
+							<h5>패밀리 사이트</h5>
+							<p>LagandaAll의 기타 서비스들을 확인해보세요</p>
+							<div class="d-flex flex-column flex-sm-row w-100 gap-2">
+								<select class="form-select" aria-label="Default select example">
+									<option selected>LagandaAll Edu</option>
+									<option value="1">LagandaAll AI</option>
+									<option value="2">LagandaAll Community</option>
+									<option value="3">LagandaAll Hosting</option>
+								</select>
+								<button class="btn btn-primary" type="button">이동</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div
+					class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top"
+				>
+					<p>© 2023 LagandaAll, Inc. All rights reserved.</p>
+					<ul class="list-unstyled d-flex fs-5">
+						<li class="ms-3">
+							<a class="link-dark" href="#"><i class="fa-brands fa-youtube"></i></a>
+						</li>
+						<li class="ms-3">
+							<a class="link-dark" href="#"><i class="fa-brands fa-instagram"></i></a>
+						</li>
+						<li class="ms-3">
+							<a class="link-dark" href="#"><i class="fa-brands fa-github"></i></a>
+						</li>
+					</ul>
+				</div>
+			</footer>
+		</div>
+	</body>
+</html>

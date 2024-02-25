@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>LagandaAll - 회원가입</title>
+	</head>
+	<body>
+		<div class="container col-xl-10 col-xxl-8 px-4 py-5 OneMobilePop">
+			<div class="row align-items-center g-lg-5 py-5">
+				<div class="col-lg-7 text-center text-lg-start">
+					<h1 class="display-4 fw-bold lh-1 mb-3">
+						LagandaAll 회원가입
+					</h1>
+					<p class="col-lg-10 fs-4">
+						LagandaAll에 가입하고 LagandaAll의 모든 서비스를 이용해보세요!
+					</p>
+				</div>
+				<div class="col-md-10 mx-auto col-lg-5">
+					<div class="p-4 p-md-5 border rounded-3 bg-light">
+						<div class="alert alert-danger d-none" role="alert" id="alert">
+							경고창
+						</div>
+						<div class="sec">
+							<div class="form-floating mb-3 shadow-sm">
+								<input
+									type="email"
+									class="form-control"
+									id="email"
+									placeholder="name@example.com"
+								/>
+								<label for="floatingInput">이메일</label>
+							</div>
+							<div class="form-floating mb-3 shadow-sm">
+								<input
+									type="password"
+									class="form-control"
+									id="pwd"
+									placeholder="Password"
+								/>
+								<label for="floatingPassword">비밀번호</label>
+							</div>
+							<div class="form-floating mb-3 shadow-sm">
+								<input
+									type="password"
+									class="form-control"
+									id="pwdcheck"
+									placeholder="Password"
+								/>
+								<label for="floatingPassword">비밀번호 확인</label>
+							</div>
+							<div class="form-floating mb-3 shadow-sm">
+								<input
+									type="text"
+									class="form-control"
+									id="name"
+									placeholder="Password"
+								/>
+								<label for="floatingPassword">닉네임</label>
+							</div>
+							<div class="checkbox mb-3">
+								<label>
+									<input type="checkbox" id="checkbox" /> 저는
+									개인정보보호처리방침과 이용약관을 전부 숙지하였으며 이에 전부
+									동의 합니다
+								</label>
+							</div>
+							<button class="w-100 btn btn-lg btn-primary shadow" id="submit">
+								회원가입
+							</button>
+							<hr class="my-4" />
+							<small class="text-muted"
+								>이미 계정이 있나요?
+								<a href="/login" class="text-decoration-none"
+									>로그인 하러 가기➡</a
+								></small
+							>
+						</div>
+						<div class="d-none sec">
+							<div class="alert alert-success" role="alert">
+								입력한 이메일로 회원가입 인증 링크를 보냈습니다! 이메일을
+								인증해주세요!
+							</div>
+							<hr class="my-4" />
+							<small class="text-muted"
+								>이미 계정이 있나요?
+								<a href="/login" class="text-decoration-none"
+									>로그인 하러 가기➡</a
+								></small
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="module">
+			import {
+				getAuth,
+				createUserWithEmailAndPassword,
+				sendEmailVerification
+			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
+			import {
+				getFirestore,
+				doc,
+				setDoc,
+			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+			import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
+
+			const db = getFirestore();
+			const auth = getAuth();
+
+			function join() {
+				if (
+					$('#email').val() != '' &&
+					$('#pwd').val() != '' &&
+					$('#pwdcheck').val() != '' &&
+					$('#name') &&
+					$('#checkbox').is(':checked') == true
+				) {
+					if ($('#pwd').val() == $('#pwdcheck').val()) {
+						createUserWithEmailAndPassword(auth, $('#email').val(), $('#pwd').val())
+							.then((userCredential) => {
+								const user = userCredential.user;
+								$('.sec').toggleClass('d-none');
+								setDoc(doc(db, 'users', user.uid), {
+									name: $('#name').val(),
+									point: 1000,
+									rank: 'default',
+								});
+								sendEmailVerification(auth.currentUser)
+							})
+							.catch((error) => {
+								displayError('firebase', error);
+							});
+					} else {
+						displayError(
+							'lagandaError',
+							'비밀번호와 비밀번호 확인란이 동일하지 않습니다'
+						);
+					}
+				} else {
+					displayError('lagandaError', '모든 칸을 다 채워주세요');
+				}
+			}
+			document.getElementById('submit').addEventListener('click', join);
+		</script>
+	</body>
+</html>
